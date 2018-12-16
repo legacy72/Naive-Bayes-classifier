@@ -1,0 +1,9 @@
+C:\Users\vladr\source\repos\Naive Bayes classifier\Naive Bayes classifier\bin\Debug\Naive Bayes classifier.exe.config
+C:\Users\vladr\source\repos\Naive Bayes classifier\Naive Bayes classifier\bin\Debug\Naive Bayes classifier.exe
+C:\Users\vladr\source\repos\Naive Bayes classifier\Naive Bayes classifier\bin\Debug\Naive Bayes classifier.pdb
+C:\Users\vladr\source\repos\Naive Bayes classifier\Naive Bayes classifier\obj\Debug\Naive Bayes classifier.csprojAssemblyReference.cache
+C:\Users\vladr\source\repos\Naive Bayes classifier\Naive Bayes classifier\obj\Debug\Naive_Bayes_classifier.Properties.Resources.resources
+C:\Users\vladr\source\repos\Naive Bayes classifier\Naive Bayes classifier\obj\Debug\Naive Bayes classifier.csproj.GenerateResource.cache
+C:\Users\vladr\source\repos\Naive Bayes classifier\Naive Bayes classifier\obj\Debug\Naive Bayes classifier.csproj.CoreCompileInputs.cache
+C:\Users\vladr\source\repos\Naive Bayes classifier\Naive Bayes classifier\obj\Debug\Naive Bayes classifier.exe
+C:\Users\vladr\source\repos\Naive Bayes classifier\Naive Bayes classifier\obj\Debug\Naive Bayes classifier.pdb
