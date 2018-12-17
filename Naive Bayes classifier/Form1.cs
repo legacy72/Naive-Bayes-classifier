@@ -96,12 +96,13 @@ namespace Naive_Bayes_classifier
 
         
 
-        static void Test()
+    
+
+        static double GetProbabilitySpam(string testString, int countUniqueKeys)
         {
-            string testString = "надо купить сигареты";
             string[] str = testString.Split();
 
-            List<int> W = new List<int>();
+            List<int> W = new List<int>(); // сколько раз слово встречалось в классе спам
 
             foreach (string s in str)
             {
@@ -114,15 +115,77 @@ namespace Naive_Bayes_classifier
                     W.Add(0);
                 }
             }
+
             double probSpam = Math.Log(SpamFrequencies / (SpamFrequencies + HamFrequencies));
-            MessageBox.Show(probSpam.ToString());
             foreach (int w in W)
             {
-                probSpam += Math.Log((1 + w) / (double)(8 + SpamDict.Count()));
+                probSpam += Math.Log((1 + w) / (double)(countUniqueKeys + SpamDict.Count()));
             }
-            MessageBox.Show(probSpam.ToString());
+          
+            return probSpam;
         }
 
+        static double GetProbabilityHam(string testString, int countUniqueKeys)
+        {
+            string[] str = testString.Split();
+
+            List<int> W = new List<int>(); // сколько раз слово встречалось в классе не спам
+
+            foreach (string s in str)
+            {
+                if (HamDict.ContainsKey(s))
+                {
+                    W.Add(HamDict[s]);
+                }
+                else
+                {
+                    W.Add(0);
+                }
+            }
+
+            double probHam = Math.Log(HamFrequencies / (SpamFrequencies + HamFrequencies));
+            foreach (int w in W)
+            {
+                probHam += Math.Log((1 + w) / (double)(countUniqueKeys + HamDict.Count()));
+            }
+
+            return probHam;
+        }
+
+        static int GetCountUniqueKeys()
+        {
+            List<string> keyListSpam = new List<string>(SpamDict.Keys);
+            List<string> keyListHam = new List<string>(HamDict.Keys);
+            keyListSpam.AddRange(keyListHam);
+
+            keyListSpam = keyListSpam.Distinct().ToList();
+
+            return keyListSpam.Count();
+        }
+
+        static double FormationOfProbabilisticSpace(double a, double b)
+        {
+            return Math.Exp(a) / (Math.Exp(a) + Math.Exp(b));
+        }
+
+        static void Test()
+        {
+            // строка проверки на спам
+            string testString = "надо купить сигареты";
+            // количество уникальных слов в обеих выборках
+            int countUniqueKeys = GetCountUniqueKeys();
+            
+            // подсчет шанса что спам (не вероятностное пространство)
+            double resSpam = GetProbabilitySpam(testString, countUniqueKeys);
+
+            // подсчет шанса что не спам (не вероятностное пространство)
+            double resHam = GetProbabilityHam(testString, countUniqueKeys);
+
+            double probSpam = FormationOfProbabilisticSpace(resSpam, resHam);
+            double probHam = FormationOfProbabilisticSpace(resHam, resSpam); // ну либо 1 - probSpam (как угодно)
+            MessageBox.Show("Вероятность, что сообщение спам: " + probSpam.ToString());
+            MessageBox.Show("Вероятность, что сообщение не спам: " + probHam.ToString());
+        }
 
         static void PrintDict(Dictionary<string, int> dictionary)
         {
