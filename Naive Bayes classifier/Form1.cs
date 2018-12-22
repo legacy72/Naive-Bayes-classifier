@@ -13,7 +13,7 @@ namespace Naive_Bayes_classifier
 {
     public partial class Form1 : Form
     {
-        string path = @"C:\Users\vladr\Desktop\test.txt"; // тут укажи свой путь к файлу для тренировки
+        string path = @"C:\Users\vladr\source\repos\Naive Bayes classifier\data\training data.txt"; // тут укажи свой путь к файлу для тренировки
         Dictionary<string, int> SpamDict = new Dictionary<string, int>(); // словарь спама
         Dictionary<string, int> HamDict = new Dictionary<string, int>(); // словарь неспама
         double SpamFrequencies = 0; // количество документов в обучающей выборке принадлежащих классу спам;
@@ -23,12 +23,11 @@ namespace Naive_Bayes_classifier
         {
             InitializeComponent();
 
-            ReadFromFile();
-            Test();
+            TrainingData();
         }
 
         // чтение данных из файла
-        void ReadFromFile()
+        void TrainingData()
         {
             string contents = File.ReadAllText(path, Encoding.UTF8);
             string[] str = contents.Split('\n');
@@ -166,10 +165,8 @@ namespace Naive_Bayes_classifier
         }
 
         // сама проверка на спам
-        void Test()
+        void Test(string testString)
         {
-            // строка проверки на спам
-            string testString = "надо купить сигареты";
             // количество уникальных слов в обеих выборках
             int countUniqueKeys = GetCountUniqueKeys();
 
@@ -191,7 +188,8 @@ namespace Naive_Bayes_classifier
         //Вывод результата на диаграмму
         void ShowResultGraph(double probSpam, double probHam)
         {
-            chart1.Series["spamProb"].Points.AddXY("спам", probSpam * 100 + 60);
+            chart1.Series[0].Points.Clear();
+            chart1.Series["spamProb"].Points.AddXY("спам", probSpam * 100);
             chart1.Series["spamProb"].Points.AddXY("не спам", probHam * 100);
         }
 
@@ -204,6 +202,38 @@ namespace Naive_Bayes_classifier
                 s += string.Format("{0}: {1}", kvp.Key, kvp.Value) + "\n";
             }
             MessageBox.Show(s);
+        }
+
+        // опен файл диалог (выбираем текстовик на проверку)
+        // ВАЖНО!!!
+        // 1) файл должен быть сохранен в кодировке UTF-8 без BOM
+        // 2) чтобы была точность писать все маленькими буквами без знаков препинания
+        // Можно конечно настроить преобразование все к lowercase, удалить знаки и тд,
+        // но к алгоритму это никак не относится
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
+
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "Рабочий стол:\\";
+                openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    filePath = openFileDialog.FileName;
+                    var fileStream = openFileDialog.OpenFile();
+
+                    using (StreamReader reader = new StreamReader(fileStream))
+                    {
+                        fileContent = reader.ReadToEnd();
+                        Test(fileContent);
+                    }
+                }
+            }
         }
     }
 }
