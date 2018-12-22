@@ -13,48 +13,45 @@ namespace Naive_Bayes_classifier
 {
     public partial class Form1 : Form
     {
-        static string path = @"C:\Users\vladr\Desktop\test.txt";
-        static Dictionary<string, int> SpamDict = new Dictionary<string, int>();
-        static Dictionary<string, int> HamDict = new Dictionary<string, int>();
-        static double SpamFrequencies = 0;
-        static double HamFrequencies = 0;
+        string path = @"C:\Users\vladr\Desktop\test.txt"; // тут укажи свой путь к файлу для тренировки
+        Dictionary<string, int> SpamDict = new Dictionary<string, int>(); // словарь спама
+        Dictionary<string, int> HamDict = new Dictionary<string, int>(); // словарь неспама
+        double SpamFrequencies = 0; // количество документов в обучающей выборке принадлежащих классу спам;
+        double HamFrequencies = 0; // количество документов в обучающей выборке принадлежащих классу неспам;
+
         public Form1()
         {
             InitializeComponent();
 
             ReadFromFile();
             Test();
-            this.Close();
         }
 
-        static void ReadFromFile()
+        // чтение данных из файла
+        void ReadFromFile()
         {
             string contents = File.ReadAllText(path, Encoding.UTF8);
-
             string[] str = contents.Split('\n');
 
-            
             foreach (string s in str)
             {
                 SplitRow(s);
             }
-
-            //PrintDict(SpamDict);
-            //MessageBox.Show(SpamFrequencies.ToString());
-            //PrintDict(HamDict);
-            //MessageBox.Show(HamFrequencies.ToString());
         }
 
-        static void SplitRow(string s)
+        void SplitRow(string s)
         {
+            // расплитили текст из файла на 
+            // text[0] - все слова сообщения
+            // text[1] - категория (спам/неспам)
             string[] text = new string[2];
             text = s.Split(':');
 
-           
             FillDictionary(text[0], text[1]);
         }
 
-        static void FillDictionary(string s, string filter)
+        // заполнение словарей словами, которые принадлежат к конкретной категории
+        void FillDictionary(string s, string filter)
         {
             string[] words = s.Split();
 
@@ -94,11 +91,8 @@ namespace Naive_Bayes_classifier
             }
         }
 
-        
-
-    
-
-        static double GetProbabilitySpam(string testString, int countUniqueKeys)
+        // Вычисление вероятности, что сообщение спам
+        double GetProbabilitySpam(string testString, int countUniqueKeys)
         {
             string[] str = testString.Split();
 
@@ -121,11 +115,12 @@ namespace Naive_Bayes_classifier
             {
                 probSpam += Math.Log((1 + w) / (double)(countUniqueKeys + SpamDict.Count()));
             }
-          
+
             return probSpam;
         }
 
-        static double GetProbabilityHam(string testString, int countUniqueKeys)
+        // Вычисление вероятности, что сообщение неспам
+        double GetProbabilityHam(string testString, int countUniqueKeys)
         {
             string[] str = testString.Split();
 
@@ -152,7 +147,8 @@ namespace Naive_Bayes_classifier
             return probHam;
         }
 
-        static int GetCountUniqueKeys()
+        // Подсчет кол-ва уникальных слов во всей выборке
+        int GetCountUniqueKeys()
         {
             List<string> keyListSpam = new List<string>(SpamDict.Keys);
             List<string> keyListHam = new List<string>(HamDict.Keys);
@@ -163,18 +159,20 @@ namespace Naive_Bayes_classifier
             return keyListSpam.Count();
         }
 
-        static double FormationOfProbabilisticSpace(double a, double b)
+        // Формирование вероятностного пространства
+        double FormationOfProbabilisticSpace(double a, double b)
         {
             return Math.Exp(a) / (Math.Exp(a) + Math.Exp(b));
         }
 
-        static void Test()
+        // сама проверка на спам
+        void Test()
         {
             // строка проверки на спам
             string testString = "надо купить сигареты";
             // количество уникальных слов в обеих выборках
             int countUniqueKeys = GetCountUniqueKeys();
-            
+
             // подсчет шанса что спам (не вероятностное пространство)
             double resSpam = GetProbabilitySpam(testString, countUniqueKeys);
 
@@ -183,11 +181,22 @@ namespace Naive_Bayes_classifier
 
             double probSpam = FormationOfProbabilisticSpace(resSpam, resHam);
             double probHam = FormationOfProbabilisticSpace(resHam, resSpam); // ну либо 1 - probSpam (как угодно)
-            MessageBox.Show("Вероятность, что сообщение спам: " + probSpam.ToString());
-            MessageBox.Show("Вероятность, что сообщение не спам: " + probHam.ToString());
+            
+            //MessageBox.Show("Вероятность, что сообщение спам: " + probSpam.ToString());
+            //MessageBox.Show("Вероятность, что сообщение не спам: " + probHam.ToString());
+
+            ShowResultGraph(probSpam, probHam);
         }
 
-        static void PrintDict(Dictionary<string, int> dictionary)
+        //Вывод результата на диаграмму
+        void ShowResultGraph(double probSpam, double probHam)
+        {
+            chart1.Series["spamProb"].Points.AddXY("спам", probSpam * 100 + 60);
+            chart1.Series["spamProb"].Points.AddXY("не спам", probHam * 100);
+        }
+
+        // Вывод словаря для тестирования (можно удалить)
+        void PrintDict(Dictionary<string, int> dictionary)
         {
             string s = "";
             foreach (KeyValuePair<string, int> kvp in dictionary)

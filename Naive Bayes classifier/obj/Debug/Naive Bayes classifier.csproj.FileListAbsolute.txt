@@ -7,3 +7,4 @@ C:\Users\vladr\source\repos\Naive Bayes classifier\Naive Bayes classifier\obj\De
 C:\Users\vladr\source\repos\Naive Bayes classifier\Naive Bayes classifier\obj\Debug\Naive Bayes classifier.csproj.CoreCompileInputs.cache
 C:\Users\vladr\source\repos\Naive Bayes classifier\Naive Bayes classifier\obj\Debug\Naive Bayes classifier.exe
 C:\Users\vladr\source\repos\Naive Bayes classifier\Naive Bayes classifier\obj\Debug\Naive Bayes classifier.pdb
+C:\Users\vladr\source\repos\Naive Bayes classifier\Naive Bayes classifier\obj\Debug\Naive_Bayes_classifier.Form1.resources
