@@ -207,7 +207,7 @@ namespace Naive_Bayes_classifier
         // опен файл диалог (выбираем текстовик на проверку)
         // ВАЖНО!!!
         // 1) файл должен быть сохранен в кодировке UTF-8 без BOM
-        // 2) чтобы была точность писать все маленькими буквами без знаков препинания
+        // 2) чтобы была точность писать без знаков препинания
         // Можно конечно настроить преобразование все к lowercase, удалить знаки и тд,
         // но к алгоритму это никак не относится
         private void button1_Click(object sender, EventArgs e)
@@ -230,10 +230,15 @@ namespace Naive_Bayes_classifier
                     using (StreamReader reader = new StreamReader(fileStream))
                     {
                         fileContent = reader.ReadToEnd();
-                        Test(fileContent);
+                        richTextBox1.Text = fileContent;
                     }
                 }
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Test(richTextBox1.Text.ToLower());
         }
     }
 }
