@@ -36,6 +36,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.textBoxWord = new System.Windows.Forms.TextBox();
+            this.buttonAddToDict = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -45,19 +48,19 @@
             this.chart1.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(183, 12);
+            this.chart1.Location = new System.Drawing.Point(183, 11);
             this.chart1.Name = "chart1";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
             series1.Name = "spamProb";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(300, 185);
+            this.chart1.Size = new System.Drawing.Size(300, 199);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(11, 180);
+            this.button1.Location = new System.Drawing.Point(11, 181);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -92,11 +95,40 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(489, 11);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(232, 199);
+            this.listBox1.TabIndex = 5;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            // 
+            // textBoxWord
+            // 
+            this.textBoxWord.Location = new System.Drawing.Point(727, 11);
+            this.textBoxWord.Name = "textBoxWord";
+            this.textBoxWord.Size = new System.Drawing.Size(134, 20);
+            this.textBoxWord.TabIndex = 6;
+            // 
+            // buttonAddToDict
+            // 
+            this.buttonAddToDict.Location = new System.Drawing.Point(727, 38);
+            this.buttonAddToDict.Name = "buttonAddToDict";
+            this.buttonAddToDict.Size = new System.Drawing.Size(134, 23);
+            this.buttonAddToDict.TabIndex = 7;
+            this.buttonAddToDict.Text = "Добавить в словарь";
+            this.buttonAddToDict.UseVisualStyleBackColor = true;
+            this.buttonAddToDict.Click += new System.EventHandler(this.buttonAddToDict_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(495, 215);
+            this.ClientSize = new System.Drawing.Size(870, 219);
+            this.Controls.Add(this.buttonAddToDict);
+            this.Controls.Add(this.textBoxWord);
+            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.label1);
@@ -117,6 +149,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.TextBox textBoxWord;
+        private System.Windows.Forms.Button buttonAddToDict;
     }
 }
 

@@ -24,6 +24,17 @@ namespace Naive_Bayes_classifier
             InitializeComponent();
 
             TrainingData();
+        }       
+        
+        // Вывод словаря для тестирования (можно удалить)
+        void PrintDict(Dictionary<string, int> dictionary)
+        {
+            string s = "";
+            foreach (KeyValuePair<string, int> kvp in dictionary)
+            {
+                s += string.Format("{0}: {1}", kvp.Key, kvp.Value) + "\n";
+            }
+            MessageBox.Show(s);
         }
 
         // чтение данных из файла
@@ -178,7 +189,7 @@ namespace Naive_Bayes_classifier
 
             double probSpam = FormationOfProbabilisticSpace(resSpam, resHam);
             double probHam = FormationOfProbabilisticSpace(resHam, resSpam); // ну либо 1 - probSpam (как угодно)
-            
+
             //MessageBox.Show("Вероятность, что сообщение спам: " + probSpam.ToString());
             //MessageBox.Show("Вероятность, что сообщение не спам: " + probHam.ToString());
 
@@ -193,16 +204,7 @@ namespace Naive_Bayes_classifier
             chart1.Series["spamProb"].Points.AddXY("не спам", probHam * 100);
         }
 
-        // Вывод словаря для тестирования (можно удалить)
-        void PrintDict(Dictionary<string, int> dictionary)
-        {
-            string s = "";
-            foreach (KeyValuePair<string, int> kvp in dictionary)
-            {
-                s += string.Format("{0}: {1}", kvp.Key, kvp.Value) + "\n";
-            }
-            MessageBox.Show(s);
-        }
+
 
         // опен файл диалог (выбираем текстовик на проверку)
         // ВАЖНО!!!
@@ -212,6 +214,10 @@ namespace Naive_Bayes_classifier
         // но к алгоритму это никак не относится
         private void button1_Click(object sender, EventArgs e)
         {
+            listBox1.Items.Clear();
+
+            richTextBox1.Clear();
+
             var fileContent = string.Empty;
             var filePath = string.Empty;
 
@@ -230,15 +236,113 @@ namespace Naive_Bayes_classifier
                     using (StreamReader reader = new StreamReader(fileStream))
                     {
                         fileContent = reader.ReadToEnd();
-                        richTextBox1.Text = fileContent;
+
+                        LoadText(fileContent);
+
+                     
+
                     }
                 }
             }
         }
 
+        private void LoadText(string fileContent)
+        {
+            richTextBox1.Text = fileContent.ToLower();
+
+            richTextBox1.SelectionStart = 0;
+            richTextBox1.SelectionLength = 0;
+            richTextBox1.SelectionColor = Color.Black;
+
+            DistinguishWords(richTextBox1.Text);
+        }
+
+        // Выделение слов цветом
+        private void DistinguishWords(string text)
+        {
+            string[] words = text.Split(' ');
+
+            var intersectedWordsIEnum = words.Intersect(SpamDict.Keys, StringComparer.OrdinalIgnoreCase);
+            string[] intersectedWords = String.Join(" ", intersectedWordsIEnum).Split(' ');
+
+
+            foreach (string word in intersectedWords)
+            {
+                HighlightText(word, Color.Red); // выделение слов цветом
+            }
+
+
+
+            var anotherWordsIEnum = words.Except(intersectedWords);
+            string[] anotherWords = String.Join(" ", anotherWordsIEnum).Split(' ');
+
+            foreach (string word in anotherWords)
+            {
+                listBox1.Items.Add(word);
+            }
+        }
+
+
+
         private void button2_Click(object sender, EventArgs e)
         {
             Test(richTextBox1.Text.ToLower());
         }
+
+
+
+        private void HighlightText(string word, Color color)
+        {
+            if (word == string.Empty)
+                return;
+
+            int s_start = richTextBox1.SelectionStart, startIndex = 0, index;
+
+            while ((index = richTextBox1.Text.IndexOf(word, startIndex)) != -1)
+            {
+                richTextBox1.Select(index, word.Length);
+                richTextBox1.SelectionColor = color;
+
+                startIndex = index + word.Length;
+            }
+
+            richTextBox1.SelectionStart = s_start;
+            richTextBox1.SelectionLength = 0;
+            richTextBox1.SelectionColor = Color.Black;
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                textBoxWord.Text = listBox1.SelectedItem.ToString();
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void buttonAddToDict_Click(object sender, EventArgs e)
+        {
+            using (StreamWriter sw = File.AppendText(path))
+            {
+                if (textBoxWord.Text != string.Empty)
+                {
+                    sw.Write("\n" + textBoxWord.Text + ":spam");
+                    listBox1.Items.Remove(textBoxWord.Text);
+                    textBoxWord.Text = "";
+                }
+            }
+
+            // обновляем все глобальные переменные перед переобучением
+            SpamDict = new Dictionary<string, int>(); // словарь спама
+            HamDict = new Dictionary<string, int>(); // словарь неспама
+            SpamFrequencies = 0; // количество документов в обучающей выборке принадлежащих классу спам;
+            HamFrequencies = 0; // количество документов в обучающей выборке принадлежащих классу неспам;
+
+            TrainingData();
+        }
+
     }
 }
